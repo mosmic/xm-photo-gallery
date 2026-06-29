@@ -1,0 +1,21 @@
+<button
+  type="button"
+  class="photo-card"
+  (click)="onPhotoClick()"
+  [attr.aria-label]="'Add photo ' + photo().id + ' to favorites'"
+>
+  @if (!imageLoaded()) {
+    <app-photo-card-skeleton />
+  }
+
+  <img
+    class="photo-card__image"
+    [class.photo-card__image--loaded]="imageLoaded()"
+    [ngSrc]="photo().url"
+    [priority]="priority()"
+    width="200"
+    height="300"
+    [alt]="'Photo ' + photo().id"
+    (load)="onImageLoad()"
+  />
+</button>

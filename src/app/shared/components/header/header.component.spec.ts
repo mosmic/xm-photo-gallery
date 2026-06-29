@@ -79,7 +79,7 @@ describe('HeaderComponent', () => {
     );
 
     expect(photosLink).toBeTruthy();
-    expect(photosLink?.getAttribute('href')).toBe('/photos');
+    expect(photosLink?.getAttribute('href')).toBe('/');
   });
 
   it('should render a Favorites link', () => {

@@ -1,1 +1,19 @@
-<p>photos-page works!</p>
+<section #scrollContainer class="photos-page">
+  <div class="photos-page__grid">
+    @for (photo of photos(); track photo.id; let index = $index) {
+      <app-photo-card [photo]="photo" [priority]="index < 30" />
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="photos-page__loader" data-testid="photos-loader">
+      <mat-spinner diameter="40" />
+    </div>
+  }
+
+  <div
+    #sentinel
+    class="photos-page__sentinel"
+    data-testid="photos-sentinel"
+  ></div>
+</section>
