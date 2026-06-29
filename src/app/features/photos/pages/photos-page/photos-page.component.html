@@ -1,7 +1,11 @@
 <section #scrollContainer class="photos-page">
   <div class="photos-page__grid">
     @for (photo of photos(); track photo.id; let index = $index) {
-      <app-photo-card [photo]="photo" [priority]="index < 30" />
+      <app-photo-card
+        [photo]="photo"
+        [priority]="index < 30"
+        (photoClicked)="addToFavorites($event)"
+      />
     }
   </div>
 
