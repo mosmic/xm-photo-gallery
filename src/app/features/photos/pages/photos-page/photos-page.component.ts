@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PhotoCardComponent } from '../../../../shared/components/photo-card/photo-card.component';
 import { Photo } from '../../../../shared/models/photo.model';
 import { PhotosService } from '../../../../shared/services/photos.service';
+import { FavoritesStorageService } from '../../../../shared/services/favorites-storage.service';
 
 @Component({
   selector: 'app-photos-page',
@@ -32,6 +33,8 @@ export class PhotosPageComponent {
 
   readonly photos = signal<Photo[]>([]);
   readonly loading = signal(false);
+
+  private readonly favoritesStorageService = inject(FavoritesStorageService);
 
   constructor() {
     afterNextRender(() => {
@@ -58,6 +61,10 @@ export class PhotosPageComponent {
         void this.loadMorePhotos();
       }
     }
+  }
+
+  addToFavorites(photo: Photo): void {
+    this.favoritesStorageService.add(photo);
   }
 
   private observeInfiniteScroll(): void {
