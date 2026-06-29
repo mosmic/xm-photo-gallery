@@ -6,8 +6,11 @@ import { Photo } from '../models/photo.model';
   providedIn: 'root',
 })
 export class PhotosService {
-  private readonly imageWidth = 200;
-  private readonly imageHeight = 300;
+  private readonly thumbnailImageWidth = 200;
+  private readonly thumbnailImageHeight = 300;
+
+  private readonly fullImageWidth = 200;
+  private readonly fullImageHeight = 300;
 
   async getPhotos(count = 12): Promise<Photo[]> {
     await this.delay(this.getRandomDelay());
@@ -20,8 +23,8 @@ export class PhotosService {
 
     return {
       id,
-      thumbnailUrl: `https://picsum.photos/seed/${id}/200/300`,
-      fullSizeUrl: `https://picsum.photos/seed/${id}/800/1200`,
+      thumbnailUrl: `https://picsum.photos/seed/${id}/${this.thumbnailImageWidth}/${this.thumbnailImageHeight}`,
+      fullSizeUrl: `https://picsum.photos/seed/${id}/${this.fullImageWidth}/${this.fullImageHeight}`,
     };
   }
 

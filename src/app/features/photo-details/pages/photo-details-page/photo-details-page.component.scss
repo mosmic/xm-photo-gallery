@@ -1,6 +1,7 @@
 .photo-details-page {
     min-height: calc(100vh - 64px);
     padding: 24px;
+    box-sizing: border-box;
 }
 
 .photo-details-page__content {

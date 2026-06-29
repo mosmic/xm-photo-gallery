@@ -1,6 +1,11 @@
 <mat-toolbar class="app-header">
   <nav class="app-header__nav">
-    <a mat-button routerLink="/" routerLinkActive="app-header__link--active">
+    <a
+      mat-button
+      routerLink="/"
+      routerLinkActive="app-header__link--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       Photos
     </a>
 
