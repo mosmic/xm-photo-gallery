@@ -1,33 +1,47 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { App } from './app';
+import { provideRouter } from '@angular/router';
+import { describe, beforeEach, expect, it } from 'vitest';
 
-describe('AppComponent', () => {
-  beforeEach(() =>
-    TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [App],
-    }),
-  );
+import { App } from './app';
+import { routes } from './app.routes';
+
+describe('App', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideRouter(routes)],
+    }).compileComponents();
+  });
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
   it(`should have as title 'gallery-template'`, () => {
     const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('gallery-template');
+
+    expect(fixture.componentInstance.title()).toEqual('gallery-template');
   });
 
-  it('should render title', () => {
+  it('should contain the header component', () => {
     const fixture = TestBed.createComponent(App);
+
     fixture.detectChanges();
+
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain(
-      'gallery-template app is running!',
-    );
+
+    expect(compiled.querySelector('app-header')).not.toBeNull();
+  });
+
+  it('should contain a router outlet for routed pages', () => {
+    const fixture = TestBed.createComponent(App);
+
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('router-outlet')).not.toBeNull();
   });
 });
