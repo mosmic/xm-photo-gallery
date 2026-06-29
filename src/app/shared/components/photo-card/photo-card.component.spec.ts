@@ -11,7 +11,8 @@ describe('PhotoCardComponent', () => {
 
   const photoMock: Photo = {
     id: 'photo-1',
-    url: 'https://picsum.photos/200/300?random=photo-1',
+    thumbnailUrl: 'https://picsum.photos/seed/photo-1/200/300',
+    fullSizeUrl: 'https://picsum.photos/seed/photo-1/800/1200',
   };
 
   beforeEach(async () => {
@@ -34,7 +35,7 @@ describe('PhotoCardComponent', () => {
     ) as HTMLImageElement;
 
     expect(image).not.toBeNull();
-    expect(image.src).toContain(photoMock.url);
+    expect(image.src).toContain(photoMock.thumbnailUrl);
     expect(image.getAttribute('width')).toBe('200');
     expect(image.getAttribute('height')).toBe('300');
   });

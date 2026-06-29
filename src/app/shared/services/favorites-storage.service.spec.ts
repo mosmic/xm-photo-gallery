@@ -6,12 +6,14 @@ import { Photo } from '../models/photo.model';
 
 const photoMock: Photo = {
   id: '1',
-  url: 'https://picsum.photos/200/300?random=1',
+  thumbnailUrl: 'https://picsum.photos/seed/1/200/300',
+  fullSizeUrl: 'https://picsum.photos/seed/1/800/1200',
 };
 
 const secondPhotoMock: Photo = {
   id: '2',
-  url: 'https://picsum.photos/200/300?random=2',
+  thumbnailUrl: 'https://picsum.photos/seed/2/200/300',
+  fullSizeUrl: 'https://picsum.photos/seed/2/800/1200',
 };
 
 describe('FavoritesStorageService', () => {
@@ -119,6 +121,27 @@ describe('FavoritesStorageService', () => {
     ) as Photo[];
 
     expect(storedFavorites).toEqual([secondPhotoMock]);
+  });
+
+  it('should show snackbar when a photo is removed successfully', () => {
+    service.add(photoMock);
+    snackBarMock.open.mockReset();
+
+    service.remove(photoMock.id);
+
+    expect(snackBarMock.open).toHaveBeenCalledWith(
+      'Photo removed from favorites',
+      'Close',
+      {
+        duration: 2500,
+      },
+    );
+  });
+
+  it('should not show snackbar when removing a non-existing photo', () => {
+    service.remove(photoMock.id);
+
+    expect(snackBarMock.open).not.toHaveBeenCalled();
   });
 
   it('should return true when a photo is favorite', () => {

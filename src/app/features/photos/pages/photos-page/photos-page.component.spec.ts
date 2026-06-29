@@ -11,18 +11,21 @@ import { PhotoCardComponent } from '../../../../shared/components/photo-card/pho
 const photosMock: Photo[] = [
   {
     id: '1',
-    url: 'https://picsum.photos/200/300?random=1',
+    thumbnailUrl: 'https://picsum.photos/seed/1/200/300',
+    fullSizeUrl: 'https://picsum.photos/seed/1/800/1200',
   },
   {
     id: '2',
-    url: 'https://picsum.photos/200/300?random=2',
+    thumbnailUrl: 'https://picsum.photos/seed/2/200/300',
+    fullSizeUrl: 'https://picsum.photos/seed/2/800/1200',
   },
 ];
 
 const morePhotosMock: Photo[] = [
   {
     id: '3',
-    url: 'https://picsum.photos/200/300?random=3',
+    thumbnailUrl: 'https://picsum.photos/seed/3/200/300',
+    fullSizeUrl: 'https://picsum.photos/seed/3/800/1200',
   },
 ];
 

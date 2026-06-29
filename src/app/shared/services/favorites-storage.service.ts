@@ -31,10 +31,24 @@ export class FavoritesStorageService {
     });
   }
 
+  findById(photoId: string): Photo | undefined {
+    return this.favoritesSignal().find((photo) => photo.id === photoId);
+  }
+
   remove(photoId: string): void {
+    const exists = this.isFavorite(photoId);
+
+    if (!exists) {
+      return;
+    }
+
     this.updateFavorites(
       this.favoritesSignal().filter((photo) => photo.id !== photoId),
     );
+
+    this.snackBar.open('Photo removed from favorites', 'Close', {
+      duration: 2500,
+    });
   }
 
   isFavorite(photoId: string): boolean {

@@ -15,4 +15,15 @@ export const routes: Routes = [
         (m) => m.FavoritesPageComponent,
       ),
   },
+  {
+    path: 'photos/:id',
+    loadComponent: () =>
+      import('./features/photo-details/pages/photo-details-page/photo-details-page.component').then(
+        (m) => m.PhotoDetailsPageComponent,
+      ),
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];

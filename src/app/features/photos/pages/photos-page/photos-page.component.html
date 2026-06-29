@@ -3,7 +3,7 @@
     @for (photo of photos(); track photo.id; let index = $index) {
       <app-photo-card
         [photo]="photo"
-        [priority]="index < 30"
+        [priority]="index < 20"
         (photoClicked)="addToFavorites($event)"
       />
     }
