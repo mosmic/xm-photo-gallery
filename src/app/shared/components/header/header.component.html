@@ -1,1 +1,19 @@
-<p>header works!</p>
+<mat-toolbar class="app-header">
+  <nav class="app-header__nav">
+    <a
+      mat-button
+      routerLink="/photos"
+      routerLinkActive="app-header__link--active"
+    >
+      Photos
+    </a>
+
+    <a
+      mat-button
+      routerLink="/favorites"
+      routerLinkActive="app-header__link--active"
+    >
+      Favorites
+    </a>
+  </nav>
+</mat-toolbar>
