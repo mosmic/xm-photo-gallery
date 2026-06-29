@@ -1,39 +1,34 @@
 .photo-details-page {
-    min-height: calc(100vh - 64px);
-    padding: 24px;
+    min-height: calc(100dvh - var(--app-header-height));
+    padding: var(--app-page-padding);
     box-sizing: border-box;
-}
-
-.photo-details-page__content {
-    min-height: calc(100vh - 112px);
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-}
 
-.photo-details-page__image {
-    display: block;
-    width: min(100%, 600px);
-    height: auto;
-    max-height: calc(100vh - 220px);
-    object-fit: contain;
-    border-radius: 16px;
-}
+    &__content,
+    &__empty-state {
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--app-page-padding);
+        text-align: center;
+    }
 
-.photo-details-page__remove-button {
-    flex-shrink: 0;
-}
+    &__image {
+        display: block;
+        width: auto;
+        max-width: min(100%, 800px);
+        max-height: calc(100dvh - 220px);
+        object-fit: contain;
+        border-radius: var(--app-card-radius);
+    }
 
-.photo-details-page__empty-state {
-    min-height: calc(100vh - 112px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    text-align: center;
+    &__remove-button {
+        flex-shrink: 0;
+    }
 
     h1,
     p {
