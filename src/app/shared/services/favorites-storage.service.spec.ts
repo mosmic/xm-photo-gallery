@@ -66,7 +66,18 @@ describe('FavoritesStorageService', () => {
 
   it('should load favorites from localStorage', () => {
     TestBed.resetTestingModule();
+
     localStorage.setItem('favorite_photos', JSON.stringify([photoMock]));
+
+    TestBed.configureTestingModule({
+      providers: [
+        FavoritesStorageService,
+        {
+          provide: MatSnackBar,
+          useValue: snackBarMock,
+        },
+      ],
+    });
 
     const newService = TestBed.inject(FavoritesStorageService);
 

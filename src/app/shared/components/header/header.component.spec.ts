@@ -32,17 +32,12 @@ describe('HeaderComponent', () => {
       providers: [
         provideRouter([
           {
-            path: 'photos',
+            path: '',
             component: PhotosStubComponent,
           },
           {
             path: 'favorites',
             component: FavoritesStubComponent,
-          },
-          {
-            path: '',
-            redirectTo: 'photos',
-            pathMatch: 'full',
           },
         ]),
       ],
@@ -118,7 +113,7 @@ describe('HeaderComponent', () => {
 
     await fixture.whenStable();
 
-    expect(router.url).toBe('/photos');
+    expect(router.url).toBe('/');
   });
 
   it('should navigate to favorites when clicking the Favorites link', async () => {
@@ -143,11 +138,11 @@ describe('HeaderComponent', () => {
     expect(router.url).toBe('/favorites');
   });
 
-  it('should highlight Photos when the active route is /photos', async () => {
+  it('should highlight Photos when the active route is /', async () => {
     const fixture = TestBed.createComponent(TestHostComponent);
     const router = TestBed.inject(Router);
 
-    await router.navigateByUrl('/photos');
+    await router.navigateByUrl('/');
 
     fixture.detectChanges();
     await fixture.whenStable();

@@ -1,6 +1,5 @@
 import { Component, input, output } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PhotosPageComponent } from './photos-page.component';
@@ -37,7 +36,7 @@ const morePhotosMock: Photo[] = [
       class="photo-card"
       (click)="photoClicked.emit(photo())"
     >
-      <img [src]="photo().url" [alt]="'Photo ' + photo().id" />
+      <img [src]="photo().thumbnailUrl" [alt]="'Photo ' + photo().id" />
     </button>
   `,
 })
