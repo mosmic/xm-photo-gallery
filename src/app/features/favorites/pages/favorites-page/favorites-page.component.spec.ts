@@ -8,15 +8,18 @@ import { FavoritesPageComponent } from './favorites-page.component';
 import { Photo } from '../../../../shared/models/photo.model';
 import { FavoritesStorageService } from '../../../../shared/services/favorites-storage.service';
 import { PhotoCardComponent } from '../../../../shared/components/photo-card/photo-card.component';
+import { By } from '@angular/platform-browser';
 
 const favoritePhotosMock: Photo[] = [
   {
     id: '1',
-    url: 'https://picsum.photos/200/300?random=1',
+    thumbnailUrl: 'https://picsum.photos/seed/1/200/300',
+    fullSizeUrl: 'https://picsum.photos/seed/1/800/1200',
   },
   {
     id: '2',
-    url: 'https://picsum.photos/200/300?random=2',
+    thumbnailUrl: 'https://picsum.photos/seed/2/200/300',
+    fullSizeUrl: 'https://picsum.photos/seed/2/800/1200',
   },
 ];
 
@@ -124,15 +127,13 @@ describe('FavoritesPageComponent', () => {
 
     fixture.detectChanges();
 
-    const firstPhotoCardDebugElement = fixture.debugElement.children.find(
-      (debugElement) =>
-        debugElement.componentInstance instanceof PhotoCardStubComponent,
+    const photoCards = fixture.debugElement.queryAll(
+      By.directive(PhotoCardStubComponent),
     );
 
-    firstPhotoCardDebugElement?.triggerEventHandler(
-      'photoClicked',
-      favoritePhotosMock[0],
-    );
+    expect(photoCards.length).toBe(2);
+
+    photoCards[0].triggerEventHandler('photoClicked', favoritePhotosMock[0]);
 
     expect(routerMock.navigate).toHaveBeenCalledWith([
       '/photos',

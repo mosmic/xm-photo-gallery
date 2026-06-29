@@ -1,0 +1,33 @@
+<section class="photo-details-page">
+  @if (photo(); as selectedPhoto) {
+    <div class="photo-details-page__content">
+      <img
+        class="photo-details-page__image"
+        [ngSrc]="selectedPhoto.fullSizeUrl"
+        width="800"
+        height="1200"
+        priority
+        [alt]="'Photo ' + selectedPhoto.id"
+      />
+
+      <button
+        mat-flat-button
+        color="warn"
+        type="button"
+        class="photo-details-page__remove-button"
+        (click)="removeFromFavorites()"
+      >
+        Remove from favorites
+      </button>
+    </div>
+  } @else {
+    <div class="photo-details-page__empty-state">
+      <h1>Photo not found</h1>
+      <p>This photo is no longer in your favorites.</p>
+
+      <button mat-flat-button type="button" routerLink="/favorites">
+        Back to favorites
+      </button>
+    </div>
+  }
+</section>

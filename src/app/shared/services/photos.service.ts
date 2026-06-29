@@ -20,7 +20,8 @@ export class PhotosService {
 
     return {
       id,
-      url: `https://picsum.photos/seed/${id}/${this.imageWidth}/${this.imageHeight}`,
+      thumbnailUrl: `https://picsum.photos/seed/${id}/200/300`,
+      fullSizeUrl: `https://picsum.photos/seed/${id}/800/1200`,
     };
   }
 
