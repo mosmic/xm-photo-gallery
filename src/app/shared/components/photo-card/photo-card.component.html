@@ -1,0 +1,12 @@
+<button
+  type="button"
+  class="photo-card"
+  (click)="onPhotoClick()"
+  [attr.aria-label]="'Add photo ' + photo().id + ' to favorites'"
+>
+  <img
+    class="photo-card__image"
+    [src]="photo().url"
+    [alt]="'Photo ' + photo().id"
+  />
+</button>
