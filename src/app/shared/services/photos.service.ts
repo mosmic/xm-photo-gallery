@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
+
 import { Photo } from '../models/photo.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PhotosService {
-  private readonly baseUrl = 'https://picsum.photos/200/300';
+  private readonly imageWidth = 200;
+  private readonly imageHeight = 300;
 
   async getPhotos(count = 12): Promise<Photo[]> {
     await this.delay(this.getRandomDelay());
@@ -18,7 +20,7 @@ export class PhotosService {
 
     return {
       id,
-      url: `${this.baseUrl}?random=${id}`,
+      url: `https://picsum.photos/seed/${id}/${this.imageWidth}/${this.imageHeight}`,
     };
   }
 

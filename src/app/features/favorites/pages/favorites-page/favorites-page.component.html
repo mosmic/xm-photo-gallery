@@ -1,0 +1,22 @@
+<section class="favorites-page">
+  <h1 class="favorites-page__title">Favorites</h1>
+
+  @if (favorites().length === 0) {
+    <div
+      class="favorites-page__empty-state"
+      data-testid="favorites-empty-state"
+    >
+      <h2>No favorites yet</h2>
+      <p>Click a photo from the photostream to add it to your favorites.</p>
+    </div>
+  } @else {
+    <div class="favorites-page__grid">
+      @for (photo of favorites(); track photo.id) {
+        <app-photo-card
+          [photo]="photo"
+          (photoClicked)="openPhotoDetails($event)"
+        />
+      }
+    </div>
+  }
+</section>
