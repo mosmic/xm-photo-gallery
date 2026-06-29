@@ -1,0 +1,23 @@
+.photos-page {
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 24px;
+}
+
+.photos-page__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 200px);
+    gap: 16px;
+    justify-content: center;
+    align-items: start;
+}
+
+.photos-page__loader {
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+}
+
+.photos-page__sentinel {
+    height: 1px;
+}

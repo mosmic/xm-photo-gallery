@@ -1,11 +1,12 @@
 import { Component, input, output } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PhotosPageComponent } from './photos-page.component';
 import { PhotosService } from '../../../../shared/services/photos.service';
 import { Photo } from '../../../../shared/models/photo.model';
+import { PhotoCardComponent } from '../../../../shared/components/photo-card/photo-card.component';
 
 const photosMock: Photo[] = [
   {
@@ -39,39 +40,51 @@ const morePhotosMock: Photo[] = [
 })
 class PhotoCardStubComponent {
   photo = input.required<Photo>();
+  priority = input(false);
   photoClicked = output<Photo>();
-}
-
-@Component({
-  selector: 'app-infinite-scroll-trigger',
-  template: `
-    <button
-      type="button"
-      class="infinite-scroll-trigger"
-      (click)="loadMore.emit()"
-    >
-      Load more
-    </button>
-  `,
-})
-class InfiniteScrollTriggerStubComponent {
-  loadMore = output<void>();
 }
 
 describe('PhotosPageComponent', () => {
   let fixture: ComponentFixture<PhotosPageComponent>;
+  let intersectionObserverCallback: IntersectionObserverCallback;
+  let observeMock: ReturnType<typeof vi.fn<(target: Element) => void>>;
+  let disconnectMock: ReturnType<typeof vi.fn<() => void>>;
 
   const photosServiceMock = {
     getPhotos: vi.fn(),
   };
 
-  const favoritesStorageServiceMock = {
-    add: vi.fn(),
-  };
-
   beforeEach(async () => {
+    intersectionObserverCallback = vi.fn();
+    observeMock = vi.fn<(target: Element) => void>();
+    disconnectMock = vi.fn<() => void>();
+
+    class IntersectionObserverMock implements IntersectionObserver {
+      readonly root = null;
+      readonly rootMargin = '300px';
+      readonly scrollMargin = '0px';
+      readonly thresholds = [];
+
+      constructor(callback: IntersectionObserverCallback) {
+        intersectionObserverCallback = callback;
+      }
+
+      disconnect(): void {
+        disconnectMock();
+      }
+
+      observe(target: Element): void {
+        observeMock(target);
+      }
+
+      takeRecords = (): IntersectionObserverEntry[] => [];
+
+      unobserve(): void {}
+    }
+
+    vi.stubGlobal('IntersectionObserver', IntersectionObserverMock);
+
     photosServiceMock.getPhotos.mockReset();
-    favoritesStorageServiceMock.add.mockReset();
 
     photosServiceMock.getPhotos.mockResolvedValue(photosMock);
 
@@ -82,23 +95,24 @@ describe('PhotosPageComponent', () => {
           provide: PhotosService,
           useValue: photosServiceMock,
         },
-        // {
-        //   provide: FavoritesStorageService,
-        //   useValue: favoritesStorageServiceMock,
-        // },
       ],
     })
       .overrideComponent(PhotosPageComponent, {
         remove: {
-          imports: [],
+          imports: [PhotoCardComponent],
         },
         add: {
-          imports: [PhotoCardStubComponent, InfiniteScrollTriggerStubComponent],
+          imports: [PhotoCardStubComponent],
         },
       })
       .compileComponents();
 
     fixture = TestBed.createComponent(PhotosPageComponent);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
   });
 
   it('should create', () => {
@@ -109,6 +123,7 @@ describe('PhotosPageComponent', () => {
     fixture.detectChanges();
 
     await fixture.whenStable();
+    await vi.waitFor(() => expect(observeMock).toHaveBeenCalled());
     fixture.detectChanges();
 
     expect(photosServiceMock.getPhotos).toHaveBeenCalledTimes(1);
@@ -130,6 +145,7 @@ describe('PhotosPageComponent', () => {
     fixture.detectChanges();
 
     await fixture.whenStable();
+    await vi.waitFor(() => expect(observeMock).toHaveBeenCalled());
     fixture.detectChanges();
 
     const photoCards = fixture.nativeElement.querySelectorAll('app-photo-card');
@@ -137,22 +153,20 @@ describe('PhotosPageComponent', () => {
     expect(photoCards.length).toBe(2);
   });
 
-  it('should add a photo to favorites when clicking a photo', async () => {
+  it('should observe the sentinel after initial photos load', async () => {
     fixture.detectChanges();
 
     await fixture.whenStable();
-    fixture.detectChanges();
+    await vi.waitFor(() => expect(observeMock).toHaveBeenCalled());
 
-    const firstPhotoCard = fixture.debugElement.queryAll(
-      By.directive(PhotoCardStubComponent),
-    )[0];
+    const sentinel = fixture.nativeElement.querySelector(
+      '[data-testid="photos-sentinel"]',
+    );
 
-    firstPhotoCard.triggerEventHandler('photoClicked', photosMock[0]);
-
-    expect(favoritesStorageServiceMock.add).toHaveBeenCalledWith(photosMock[0]);
+    expect(observeMock).toHaveBeenCalledWith(sentinel);
   });
 
-  it('should load more photos when infinite scroll is triggered', async () => {
+  it('should load more photos', async () => {
     photosServiceMock.getPhotos
       .mockResolvedValueOnce(photosMock)
       .mockResolvedValueOnce(morePhotosMock);
@@ -160,15 +174,10 @@ describe('PhotosPageComponent', () => {
     fixture.detectChanges();
 
     await fixture.whenStable();
+    await vi.waitFor(() => expect(observeMock).toHaveBeenCalled());
     fixture.detectChanges();
 
-    const infiniteScrollTrigger = fixture.debugElement.query(
-      By.directive(InfiniteScrollTriggerStubComponent),
-    );
-
-    infiniteScrollTrigger.triggerEventHandler('loadMore');
-
-    await fixture.whenStable();
+    await fixture.componentInstance.loadMorePhotos();
     fixture.detectChanges();
 
     expect(photosServiceMock.getPhotos).toHaveBeenCalledTimes(2);
@@ -186,13 +195,10 @@ describe('PhotosPageComponent', () => {
     fixture.detectChanges();
 
     await fixture.whenStable();
+    await vi.waitFor(() => expect(observeMock).toHaveBeenCalled());
     fixture.detectChanges();
 
-    const infiniteScrollTrigger = fixture.debugElement.query(
-      By.directive(InfiniteScrollTriggerStubComponent),
-    );
-
-    infiniteScrollTrigger.triggerEventHandler('loadMore');
+    void fixture.componentInstance.loadMorePhotos();
 
     fixture.detectChanges();
 
