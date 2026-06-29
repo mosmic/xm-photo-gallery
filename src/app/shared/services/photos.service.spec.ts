@@ -35,17 +35,18 @@ describe('PhotosService', () => {
     expect(photos.every((photo) => Boolean(photo.id))).toBe(true);
   });
 
-  it('should use picsum photo urls', async () => {
+  it('should use deterministic picsum seed photo urls', async () => {
     const photos = await service.getPhotos(3);
 
     expect(
-      photos.every((photo) =>
-        photo.url.startsWith('https://picsum.photos/200/300'),
+      photos.every(
+        (photo) =>
+          photo.url === `https://picsum.photos/seed/${photo.id}/200/300`,
       ),
     ).toBe(true);
   });
 
-  it('should create unique random image urls', async () => {
+  it('should create unique image urls', async () => {
     const photos = await service.getPhotos(5);
 
     const urls = photos.map((photo) => photo.url);
