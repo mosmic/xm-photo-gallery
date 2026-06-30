@@ -9,8 +9,8 @@ export class PhotosService {
   private readonly thumbnailImageWidth = 200;
   private readonly thumbnailImageHeight = 300;
 
-  private readonly fullImageWidth = 200;
-  private readonly fullImageHeight = 300;
+  private readonly fullImageWidth = 800;
+  private readonly fullImageHeight = 1200;
 
   async getPhotos(count = 12): Promise<Photo[]> {
     await this.delay(this.getRandomDelay());
